@@ -14,7 +14,7 @@ setup_logging()
 
 
 class Config():
-    DATA_PREFIX = "data"
+    DATA_PREFIX = "entity-matching-transformer\data"
     EXPERIMENT_PREFIX = "experiments"
 
     MODEL_CLASSES = {

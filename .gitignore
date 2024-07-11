@@ -1,8 +1,5 @@
 
 
-**/pre_trained_model/
-**/experiments/
-
 .idea/
 .ipynb_checkpoints
 

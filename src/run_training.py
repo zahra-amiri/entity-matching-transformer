@@ -94,7 +94,8 @@ if __name__ == "__main__":
     evaluation = Evaluation(evaluation_data_loader, exp_name, args.model_output_dir, len(label_list), args.model_type)
     logging.info("loaded and initialized evaluation examples {}".format(len(eval_examples)))
 
-    train(device,
+    train(args.data_path,tokenizer,
+          device,
           training_data_loader,
           model,
           optimizer,
@@ -105,6 +106,7 @@ if __name__ == "__main__":
           args.save_model_after_epoch,
           experiment_name=exp_name,
           output_dir=args.model_output_dir,
-          model_type=args.model_type)
+          model_type=args.model_type,
+          )
 
     save_model(model, exp_name, args.model_output_dir, tokenizer=tokenizer)

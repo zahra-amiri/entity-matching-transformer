@@ -1,17 +1,19 @@
 import logging
 import os
+from data_loader import load_data, DataType
 
 import torch
 from tqdm import tqdm, trange
-
+from data_representation import DeepMatcherProcessor
 from logging_customized import setup_logging
 from model import save_model
 from tensorboardX import SummaryWriter
+from prediction import predict
 
 setup_logging()
 
 
-def train(device,
+def train(data_path,tokenizer, device,
           train_dataloader,
           model,
           optimizer,
@@ -29,6 +31,17 @@ def train(device,
     global_step = 0
     tr_loss, logging_loss = 0.0, 0.0
     model.zero_grad()
+
+    processor = DeepMatcherProcessor()
+    test_examples = processor.get_test_examples(data_path)
+
+    logging.info("loaded {} test examples".format(len(test_examples)))
+    test_data_loader = load_data(test_examples,
+                                 processor.get_labels(),
+                                 tokenizer,
+                                 150,
+                                 16,
+                                 DataType.TEST)
 
     # we are interested in 0 shot learning, therefore we already evaluate before training.
     eval_results = evaluation.evaluate(model, device, -1)
@@ -64,6 +77,17 @@ def train(device,
             tb_writer.add_scalar('lr', scheduler.get_lr()[0], global_step)
             tb_writer.add_scalar('loss', (tr_loss - logging_loss), global_step)
             logging_loss = tr_loss
+
+    
+        logging.info("Test")
+        simple_accuracy, f1, classification_report, predictions = predict(model, device, test_data_loader)
+        logging.info("Prediction done for {} examples.F1: {}, Simple Accuracy: {}".format(len(test_data_loader), f1, simple_accuracy))
+    
+        logging.info(classification_report)
+    
+        logging.info(predictions)
+        logging.info("Test")
+
 
         eval_results = evaluation.evaluate(model, device, epoch)
         for key, value in eval_results.items():

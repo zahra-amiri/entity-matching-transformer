@@ -1,7 +1,7 @@
 import pandas as pd
 
 # Read the CSV files
-train_df = pd.read_csv('data/dirty_walmart_amazon/deep_matcher/train.csv')
+train_df = pd.read_csv('data/dirty_walmart_amazon/deep_matcher/valid.csv')
 tableA_df = pd.read_csv('data/dirty_walmart_amazon/deep_matcher/tableA.csv')
 tableB_df = pd.read_csv('data/dirty_walmart_amazon/deep_matcher/tableB.csv')
 
@@ -18,26 +18,35 @@ def get_matching_rows(train_row, tableA_df, tableB_df):
 
 
 def apply_template(row):
-    # cols = ['title','category','brand','modelno','price']
-    text = ''
-    if not row['title'].isna().values[0]:
-        text += f'Introducing the {row['title'].values[0]}'
-
-    if not row['category'].isna().values[0] and not row['brand'].values[0]:
-        text += f", a product in the {row['category'].values[0]} category by {row['brand'].values[0]}."
-    elif not row['category'].isna().values[0]:
-        text += f", in the {row['category'].values[0]} category."
-    elif not row['brand'].isna().values[0]:
-        text += f" by {row['brand'].values[0]}."
-        
-    if not row['modelno'].isna().values[0] and not row['price'].isna().values[0]:
-        text += f" This model, {row['modelno'].values[0]}, is available for {row['price'].values[0]}."
-    elif not row['modelno'].isna().values[0]:
-        text += f" Its model is {row['modelno'].values[0]}."
-    elif not row['price'].isna().values[0]:
-        text += f" This product is available for {row['price'].values[0]}."
-
+    #base : concat
+    cols = ['title','category','brand','modelno','price']
+    text = ""
+    for c in cols:
+        if not row[c].isna().values[0]:
+            text += str(row[c].values[0])
+    
     return text
+
+    #use template
+    # text = ''
+    # if not row['title'].isna().values[0]:
+    #     text += f'Introducing the {row['title'].values[0]}'
+
+    # if not row['category'].isna().values[0] and not row['brand'].values[0]:
+    #     text += f", a product in the {row['category'].values[0]} category by {row['brand'].values[0]}."
+    # elif not row['category'].isna().values[0]:
+    #     text += f", in the {row['category'].values[0]} category."
+    # elif not row['brand'].isna().values[0]:
+    #     text += f" by {row['brand'].values[0]}."
+        
+    # if not row['modelno'].isna().values[0] and not row['price'].isna().values[0]:
+    #     text += f" This model, {row['modelno'].values[0]}, is available for {row['price'].values[0]}."
+    # elif not row['modelno'].isna().values[0]:
+    #     text += f" Its model is {row['modelno'].values[0]}."
+    # elif not row['price'].isna().values[0]:
+    #     text += f" This product is available for {row['price'].values[0]}."
+
+    # return text
 
 
 # Create an empty DataFrame to store the results
@@ -65,6 +74,6 @@ for idx, train_row in train_df.iterrows():
 
 
 # Write the result DataFrame to a .tsv file
-result_df.to_csv('data/dirty_walmart_amazon/train.tsv', sep='\t', index=False)
+result_df.to_csv('data/dirty_walmart_amazon/dev.tsv', sep='\t', index=False)
 
 # Introducing the [Title], a product in the [Category] category by [Brand]. This model, [Model No.], is available for  [Price].

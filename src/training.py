@@ -48,7 +48,7 @@ def train(data_path,tokenizer, device,
     for key, value in eval_results.items():
         tb_writer.add_scalar('eval_{}'.format(key), value, global_step)
 
-    with open(os.path.join(output_dir, experiment_name) + 'test.txt', 'w') as file:
+    with open(os.path.join(output_dir, experiment_name) + '/test.txt', 'w') as file:
         for epoch in trange(int(num_epocs), desc="Epoch"):
             for step, batch in enumerate(tqdm(train_dataloader, desc="Iteration")):
                 model.train()
@@ -87,7 +87,7 @@ def train(data_path,tokenizer, device,
 
             file.write(classification_report)
 
-            file.write(predictions)
+            # file.write(predictions)
 
 
             eval_results = evaluation.evaluate(model, device, epoch)

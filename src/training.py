@@ -81,9 +81,9 @@ def train(data_path,tokenizer, device,
 
 
 
-            file.write("Test")
+            file.write(f"Test {epoch} \n")
             simple_accuracy, f1, classification_report, predictions = predict(model, device, test_data_loader)
-            file.write("Prediction done for {} examples.F1: {}, Simple Accuracy: {}".format(len(test_data_loader), f1, simple_accuracy))
+            file.write("Prediction done for {} examples. \n F1: {}, Simple Accuracy: {}".format(len(test_data_loader), f1, simple_accuracy))
 
             file.write(classification_report)
 
